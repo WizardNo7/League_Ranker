@@ -19,9 +19,12 @@ def init_argparser(args):
         description="Parse match results file/input and "
                     "compile rankings for the league.")
     parser.add_argument("results_file", default="",
-                        help="path to file that contains match results")
+                        help="Path to file that contains match results")
     parser.add_argument("-o", "--output", default="",
                         help="File to use for ranking output. "
+                        "Rankings will be printed if no file is specified.")
+    parser.add_argument("-t", "--table", action="store_true", default=False,
+                        help="Show the results as a table. "
                         "Rankings will be printed if no file is specified.")
     parser.add_argument("-v", "--version", action="version", version="0.0.1")
 
@@ -107,14 +110,52 @@ def format_rankings(scored_results):
     return rankings
 
 
-def output_rankings(rankings, output_file):
+def output_rankings(rankings, output_file, output_table):
     if output_file:
         rankings_file = Path(output_file)
 
         with rankings_file.open(mode="w") as rf:
             rf.writelines("%s\n" % rank for rank in rankings)
     else:
-        print(*rankings, sep="\n")
+        if not output_table:
+            print(*rankings, sep="\n")
+
+
+def output_results_table(scored_results, parsed_results):
+    headings = f"Pos{'':<2}Team{'':<16}Win   Draw  Lose{'':<5}Points"
+    print("-"*len(headings))
+    print(headings)
+    print("-"*len(headings))
+
+    place = 1
+    for points in (sorted(scored_results, reverse=True)):
+        suffix = ""
+        if points != 1:
+            suffix = "s"
+
+        if len(scored_results[points]) > 1:
+            for team in sorted(scored_results[points]):
+                team_stats = (
+                    f"{team:<20}"
+                    f"{parsed_results[team]['wins']:<6}"
+                    f"{parsed_results[team]['draws']:<6}"
+                    f"{parsed_results[team]['losses']:<6}"
+                )
+
+                print(
+                    f"{place:<4} {team_stats} {'':<2}{points} pt{suffix}")
+            place += len(scored_results[points])
+        else:
+            team = scored_results[points][0]
+            team_stats = (
+                f"{team:<20}"
+                f"{parsed_results[team]['wins']:<6}"
+                f"{parsed_results[team]['draws']:<6}"
+                f"{parsed_results[team]['losses']:<6}"
+            )
+
+            print(f"{place:<4} {team_stats} {'':<2}{points} pt{suffix}")
+            place += 1
 
 
 def main(args=""):
@@ -128,7 +169,11 @@ def main(args=""):
         parsed_results = parse_results(results)
         scored_results = calculate_points(parsed_results)
         rankings = format_rankings(scored_results)
-        output_rankings(rankings, args.output)
+
+        output_rankings(rankings, args.output, args.table)
+
+        if args.table:
+            output_results_table(scored_results, parsed_results)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
             print(e)
