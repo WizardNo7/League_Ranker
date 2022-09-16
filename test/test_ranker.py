@@ -6,6 +6,15 @@ import pytest
 from ranker import ranker
 
 
+def test_init_argparse_version(capsys):
+    try:
+        ranker.init_argparser(["-v"])
+    except SystemExit:
+        capt_out = capsys.readouterr().out
+
+    assert capt_out.splitlines()[0] == "0.0.1"
+
+
 def test_load_results_from_file_error():
     test_file_path = "test.txt"
 

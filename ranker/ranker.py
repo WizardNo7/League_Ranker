@@ -4,9 +4,23 @@ CLI application that parses match result inputs
 and returns the rankings for the league.
 """
 
+import argparse
+import sys
 import traceback
 
 from pathlib import Path
+
+
+def init_argparser(args):
+    """
+    Parse commandline arguments.
+    """
+    parser = argparse.ArgumentParser(
+        description="Parse match results file/input and "
+                    "compile rankings for the league.")
+    parser.add_argument("-v", "--version", action="version", version="0.0.1")
+
+    return parser.parse_args(args)
 
 
 def load_results_from_file(file_path):
@@ -23,6 +37,8 @@ def load_results_from_file(file_path):
 
 
 def main():
+    args = init_argparser(sys.argv[1:])
+
     try:
         results = load_results_from_file("test_file.txt")
         print(results)
