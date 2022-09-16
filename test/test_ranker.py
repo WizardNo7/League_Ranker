@@ -47,7 +47,7 @@ def example_results():
         "Lions 3, Snakes 3\n",
         "Tarantulas 1, FC Awesome 0\n",
         "Lions 1, FC Awesome 1\n",
-        "Tarantulas 3, Snakes 1\n",
+        "Snakes 1, Tarantulas 3\n",  # Team order swapped for extra code test
         "Lions 4, Grouches 0\n"
     ]
 
