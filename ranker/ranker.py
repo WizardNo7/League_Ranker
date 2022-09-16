@@ -107,8 +107,11 @@ def format_rankings(scored_results):
     return rankings
 
 
-def main():
-    args = init_argparser(sys.argv[1:])
+def main(args=""):
+    if not args:
+        args = init_argparser(sys.argv[1:])
+    else:
+        args = init_argparser(args)
 
     try:
         results = load_results_from_file(args.results_file)

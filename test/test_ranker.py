@@ -2,6 +2,7 @@
 """Unit tests for the ranker CLI module."""
 
 import pytest
+import re
 
 from ranker import ranker
 
@@ -60,14 +61,19 @@ def example_results():
     ]
 
 
-def test_load_results_from_file(tmp_path, example_results):
+@ pytest.fixture
+def example_results_file(tmp_path, example_results):
     test_file_path = tmp_path / "test"
     test_file_path.mkdir()
     test_file = test_file_path / "test.txt"
     test_file.write_text("".join(example_results))
 
+    return test_file
+
+
+def test_load_results_from_file(example_results_file, example_results):
     assert ranker.load_results_from_file(
-        test_file) == example_results
+        example_results_file) == example_results
 
 
 @ pytest.fixture
@@ -100,8 +106,9 @@ def test_calculate_points(example_results_table, example_scored_results):
         example_results_table) == example_scored_results
 
 
-def test_format_rankings(example_scored_results):
-    example_rankings = [
+@ pytest.fixture
+def example_rankings():
+    return [
         "1. Tarantulas, 6 pts",
         "2. Lions, 5 pts",
         "3. FC Awesome, 1 pt",
@@ -109,5 +116,24 @@ def test_format_rankings(example_scored_results):
         "5. Grouches, 0 pts"
     ]
 
+
+def test_format_rankings(example_scored_results, example_rankings):
     assert ranker.format_rankings(
         example_scored_results) == example_rankings
+
+
+@pytest.mark.parametrize("example_arg_inputs, expected_error", [
+    (["-"], "The specified file [ - ] could not be found."),
+    (["."], "Unidentified error: .*")
+])
+def test_ranker_main_error(capsys, example_arg_inputs, expected_error):
+    """
+    Test that the main() function errors correctly when expected.
+    """
+    ranker.main(example_arg_inputs)
+    capt_out = capsys.readouterr().out
+
+    if expected_error[-1] == "*":
+        assert re.compile(expected_error).match(capt_out.strip())
+    else:
+        assert capt_out.strip() == expected_error
