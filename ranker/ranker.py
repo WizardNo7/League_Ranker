@@ -38,6 +38,10 @@ def load_results_from_file(file_path):
     return results
 
 
+def parse_results(results):
+    pass
+
+
 def main():
     args = init_argparser(sys.argv[1:])
 
