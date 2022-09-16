@@ -7,7 +7,7 @@ from ranker import ranker
 
 
 def test_load_results_from_file_error():
-    test_file_path = "test_file.txt"
+    test_file_path = "test.txt"
 
     with pytest.raises(FileNotFoundError) as exc_info:
         ranker.load_results_from_file(test_file_path)

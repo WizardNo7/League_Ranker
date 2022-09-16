@@ -25,6 +25,7 @@ def load_results_from_file(file_path):
 def main():
     try:
         results = load_results_from_file("test_file.txt")
+        print(results)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
             print(e)
