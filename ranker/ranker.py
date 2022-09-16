@@ -84,7 +84,24 @@ def calculate_points(parsed_results):
 
 
 def format_rankings(scored_results):
-    pass
+    rankings = []
+
+    place = 1
+    for points in (sorted(scored_results, reverse=True)):
+        suffix = ""
+        if points != 1:
+            suffix = "s"
+
+        if len(scored_results[points]) > 1:
+            for team in sorted(scored_results[points]):
+                rankings.append(f"{place}. {team}, {points} pt{suffix}")
+            place += len(scored_results[points])
+        else:
+            rankings.append(
+                f"{place}. {scored_results[points][0]}, {points} pt{suffix}")
+            place += 1
+
+    return rankings
 
 
 def main():
