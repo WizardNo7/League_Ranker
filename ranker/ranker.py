@@ -32,6 +32,7 @@ def init_argparser(args):
 
 
 def load_results_from_file(file_path):
+    """Take file path, load results from file and into a list."""
     results_file = Path(file_path)
 
     if not results_file.exists():
@@ -45,6 +46,7 @@ def load_results_from_file(file_path):
 
 
 def parse_results(results):
+    """Take list of results, and compute team statistics into a dict."""
     result_table = {}
     team_stats = {
         "wins": 0,
@@ -75,6 +77,7 @@ def parse_results(results):
 
 
 def calculate_points(parsed_results):
+    """Take statistics dictionary and compile dict of teams per point total."""
     scored_results = {}
 
     for key in parsed_results:
@@ -90,6 +93,7 @@ def calculate_points(parsed_results):
 
 
 def format_rankings(scored_results):
+    """Take dict of teams per point, and format them into list for printing."""
     rankings = []
 
     place = 1
@@ -111,6 +115,7 @@ def format_rankings(scored_results):
 
 
 def output_rankings(rankings, output_file, output_table):
+    """Take list of rankings and output as requested; stdout, file or table."""
     if output_file:
         rankings_file = Path(output_file)
 
@@ -122,6 +127,7 @@ def output_rankings(rankings, output_file, output_table):
 
 
 def output_results_table(scored_results, parsed_results):
+    """Take dicts of stats and points and output in tabular format."""
     headings = f"Pos{'':<2}Team{'':<16}Win   Draw  Lose{'':<5}Points"
     print("-"*len(headings))
     print(headings)
@@ -159,6 +165,7 @@ def output_results_table(scored_results, parsed_results):
 
 
 def main(args=""):
+    """Main function for running as CLI app."""
     if not args:
         args = init_argparser(sys.argv[1:])
     else:

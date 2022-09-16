@@ -8,6 +8,7 @@ from ranker import ranker
 
 
 def test_init_argparse_version(capsys):
+    """Test that argparse returns correct version when prompted."""
     try:
         ranker.init_argparser(["-v"])
     except SystemExit:  # argparse will throw a SysExit, it's not an error
@@ -22,6 +23,7 @@ def test_init_argparse_version(capsys):
     (["-o", "out.txt"], "the following arguments are required: results_file")
 ])
 def test_init_argparse_arg_errors(capsys, ex_arg_inputs, expected_result):
+    """Test that the correct arguments have the expected results."""
     try:
         args = ranker.init_argparser(ex_arg_inputs)
     except SystemExit:
@@ -51,6 +53,7 @@ def test_load_results_from_file_error():
 
 @ pytest.fixture
 def ex_results():
+    """Creates a mock version of the input file for testing."""
     return [
         "Lions 3, Snakes 3\n",
         "Tarantulas 1, FC Awesome 0\n",
@@ -62,6 +65,7 @@ def ex_results():
 
 @ pytest.fixture
 def ex_results_file(tmp_path, ex_results):
+    """Creates a testing file for input testing."""
     test_file_path = tmp_path / "test"
     test_file_path.mkdir()
     test_file = test_file_path / "test.txt"
@@ -71,11 +75,13 @@ def ex_results_file(tmp_path, ex_results):
 
 
 def test_load_results_from_file(ex_results_file, ex_results):
+    """Test that loading from file returns expected results."""
     assert ranker.load_results_from_file(ex_results_file) == ex_results
 
 
 @ pytest.fixture
 def ex_results_table():
+    """Creates a mock version of the computed result statistics dict."""
     return {
         "Lions": {"wins": 1, "losses": 0, "draws": 2},
         "Snakes": {"wins": 0, "losses": 1, "draws": 1},
@@ -86,11 +92,13 @@ def ex_results_table():
 
 
 def test_parse_results(ex_results, ex_results_table):
+    """Test that the results list gets computed to correct statistics dict."""
     assert ranker.parse_results(ex_results) == ex_results_table
 
 
 @ pytest.fixture
 def ex_scored_results():
+    """Creates a mock version of the computed scored dict."""
     return {
         6: ["Tarantulas"],
         5: ["Lions"],
@@ -100,11 +108,13 @@ def ex_scored_results():
 
 
 def test_calculate_points(ex_results_table, ex_scored_results):
+    """Test that the statistics dict gets computed to correct scored dict."""
     assert ranker.calculate_points(ex_results_table) == ex_scored_results
 
 
 @ pytest.fixture
 def ex_rankings():
+    """Creates a mock version of the final rankings list."""
     return [
         "1. Tarantulas, 6 pts",
         "2. Lions, 5 pts",
@@ -115,11 +125,13 @@ def ex_rankings():
 
 
 def test_format_rankings(ex_scored_results, ex_rankings):
+    """Test that the scored dict gets formatted to correct rankings list."""
     assert ranker.format_rankings(ex_scored_results) == ex_rankings
 
 
 @ pytest.fixture
 def ex_rankings_file(tmp_path):
+    """Creates a testing file for output testing."""
     test_outfile_path = tmp_path / "test"
     test_outfile_path.mkdir(exist_ok=True)
     test_outfile = test_outfile_path / "out_test.txt"
@@ -128,6 +140,7 @@ def ex_rankings_file(tmp_path):
 
 
 def test_output_rankings(ex_rankings, ex_rankings_file):
+    """Test that the rankings list gets output to file correctly."""
     ranker.output_rankings(ex_rankings, ex_rankings_file, False)
 
     assert ex_rankings_file.read_text().strip() == "\n".join(ex_rankings)
@@ -139,9 +152,7 @@ def test_output_rankings(ex_rankings, ex_rankings_file):
     # ([], "") # TODO: Fix this test
 ])
 def test_ranker_main_error(capsys, ex_arg_inputs, expected_error):
-    """
-    Test that the main() function errors correctly when expected.
-    """
+    """Test that the main function errors correctly when expected."""
     ranker.main(ex_arg_inputs)
     capt_out = capsys.readouterr().out
 
@@ -152,9 +163,7 @@ def test_ranker_main_error(capsys, ex_arg_inputs, expected_error):
 
 
 def test_ranker_main(capsys, ex_results_file, ex_rankings):
-    """
-    Test that the main() function returns the expected rankings.
-    """
+    """Test that the main function returns the expected rankings."""
     ranker.main([ex_results_file.as_posix()])
     capt_out = capsys.readouterr().out
 
@@ -162,9 +171,7 @@ def test_ranker_main(capsys, ex_results_file, ex_rankings):
 
 
 def test_ranker_main_output(ex_results_file, ex_rankings_file, ex_rankings):
-    """
-    Test that the main() function returns the expected rankings as output file.
-    """
+    """Test that the main function outputs the expected rankings to file."""
     test_args = [ex_results_file.as_posix(), "-o", ex_rankings_file.as_posix()]
     ranker.main(test_args)
 
@@ -172,6 +179,7 @@ def test_ranker_main_output(ex_results_file, ex_rankings_file, ex_rankings):
 
 
 def test_ranker_main_table_output(capsys, ex_results_file):
+    """Test that the main function returns the expected rankings as table."""
     ex_rankings_table = [
         "----------------------------------------------------",
         "Pos  Team                Win   Draw  Lose     Points",
