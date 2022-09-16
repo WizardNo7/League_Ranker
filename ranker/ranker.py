@@ -68,6 +68,10 @@ def parse_results(results):
     return result_table
 
 
+def calculate_points(parsed_results):
+    pass
+
+
 def main():
     args = init_argparser(sys.argv[1:])
 

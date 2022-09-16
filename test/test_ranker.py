@@ -62,8 +62,9 @@ def test_load_results_from_file(tmp_path, example_results):
         test_file) == example_results
 
 
-def test_parse_results(example_results):
-    example_results_table = {
+@ pytest.fixture
+def example_results_table():
+    return {
         "Lions": {"wins": 1, "losses": 0, "draws": 2},
         "Snakes": {"wins": 0, "losses": 1, "draws": 1},
         "Tarantulas": {"wins": 2, "losses": 0, "draws": 0},
@@ -71,4 +72,18 @@ def test_parse_results(example_results):
         "Grouches": {"wins": 0, "losses": 1, "draws": 0}
     }
 
+
+def test_parse_results(example_results, example_results_table):
     assert ranker.parse_results(example_results) == example_results_table
+
+
+def test_calculate_points(example_results_table):
+    example_scored_results = {
+        6: ["Tarantulas"],
+        5: ["Lions"],
+        1: ["Snakes", "FC Awesome"],
+        0: ["Grouches"]
+    }
+
+    assert ranker.calculate_points(
+        example_results_table) == example_scored_results
