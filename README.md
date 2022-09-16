@@ -26,8 +26,63 @@ source venv/bin/activate
 
 ## Running CLI Application
 Start in the root of the project directory, with your [Python environment](#setup-a-python-3-virtual-environment) ready.
+
+If you only call the script, with no other values provided, you will see the most basic running instructions returned from the script:
 ```bash
-python ranker/ranker.py
+$ python ranker/ranker.py
+
+usage: ranker.py [-h] [-o OUTPUT] [-t] [-v] results_file
+ranker.py: error: the following arguments are required: results_file
+```
+The most basic usage, that fulfils the required functionality, is provided when calling the script with a the name or path to a valid text file, containing match results between two teams, as can be seen in the [example input section](#sample-input).
+
+This will print out the rankings for that league, in a format similar to what is shown in the [example output section](#expected-output).
+```bash
+$ python ranker/ranker.py results.txt
+
+1. Tarantulas, 6 pts
+2. Lions, 5 pts
+3. FC Awesome, 1 pt
+3. Snakes, 1 pt
+5. Grouches, 0 pts
+```
+
+If you want to output the rankings list to a file, use the `-o OUTPUT` flag, and specify the path to where you want the file:
+```bash
+$ python ranker/ranker.py results.txt -o rankings.txt
+```
+
+There is a special `-t` or `--table` flag, that will tell the CLI to print the rankings out as a **table**, rather than a list:
+```bash
+$ python ranker/ranker.py results.txt -t
+
+----------------------------------------------------
+Pos  Team                Win   Draw  Lose     Points
+----------------------------------------------------
+1    Tarantulas          2     0     0        6 pts
+2    Lions               1     2     0        5 pts
+3    FC Awesome          0     1     1        1 pt
+3    Snakes              0     1     1        1 pt
+5    Grouches            0     0     1        0 pts
+```
+
+For more in depth instructions, add the `-h` or `--help` flag at the end:
+```bash
+$ python ranker/ranker.py -h
+
+usage: ranker.py [-h] [-o OUTPUT] [-t] [-v] results_file
+
+Parse match results file and compile rankings for the league.
+
+positional arguments:
+  results_file          Path to file that contains match results
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        File to use for ranking output. Rankings will be printed if no file is specified.
+  -t, --table           Show the results as a table. Rankings will be printed if no file is specified.
+  -v, --version         show program's version number and exit
 ```
 
 ## Running Tests

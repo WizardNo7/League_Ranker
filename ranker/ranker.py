@@ -16,7 +16,7 @@ def init_argparser(args):
     Parse commandline arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Parse match results file/input and "
+        description="Parse match results file and "
                     "compile rankings for the league.")
     parser.add_argument("results_file", default="",
                         help="Path to file that contains match results")
