@@ -4,6 +4,8 @@ CLI application that parses match result inputs
 and returns the rankings for the league.
 """
 
+import traceback
+
 from pathlib import Path
 
 
@@ -17,5 +19,17 @@ def load_results_from_file(file_path):
     pass
 
 
+def main():
+    try:
+        results = load_results_from_file("test_file.txt")
+    except Exception as e:
+        if isinstance(e, (FileNotFoundError)):
+            print(e)
+        else:
+            print(f"Unidentified error: [ {e} ]")
+            print(" - Please send traceback to developer:")
+            print(traceback.format_exc())
+
+
 if __name__ == "__main__":
-    pass
+    main()
