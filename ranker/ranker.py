@@ -107,6 +107,16 @@ def format_rankings(scored_results):
     return rankings
 
 
+def output_rankings(rankings, output_file):
+    if output_file:
+        rankings_file = Path(output_file)
+
+        with rankings_file.open(mode="w") as rf:
+            rf.writelines("%s\n" % rank for rank in rankings)
+    else:
+        print(*rankings, sep="\n")
+
+
 def main(args=""):
     if not args:
         args = init_argparser(sys.argv[1:])
@@ -118,7 +128,7 @@ def main(args=""):
         parsed_results = parse_results(results)
         scored_results = calculate_points(parsed_results)
         rankings = format_rankings(scored_results)
-        print(rankings)
+        output_rankings(rankings, args.output)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
             print(e)
