@@ -16,7 +16,10 @@ def load_results_from_file(file_path):
         raise FileNotFoundError(
             f"The specified file [ {file_path} ] could not be found.")
 
-    pass
+    with open(results_file) as rf:
+        results = rf.readlines()
+
+    return results
 
 
 def main():
