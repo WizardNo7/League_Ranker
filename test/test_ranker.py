@@ -124,7 +124,8 @@ def test_format_rankings(example_scored_results, example_rankings):
 
 @pytest.mark.parametrize("example_arg_inputs, expected_error", [
     (["-"], "The specified file [ - ] could not be found."),
-    (["."], "Unidentified error: .*")
+    (["."], "Unidentified error: .*"),
+    # ([], "") # TODO: Fix this test
 ])
 def test_ranker_main_error(capsys, example_arg_inputs, expected_error):
     """
@@ -133,7 +134,7 @@ def test_ranker_main_error(capsys, example_arg_inputs, expected_error):
     ranker.main(example_arg_inputs)
     capt_out = capsys.readouterr().out
 
-    if expected_error[-1] == "*":
+    if len(expected_error) > 0 and expected_error[-1] == "*":
         assert re.compile(expected_error).match(capt_out.strip())
     else:
         assert capt_out.strip() == expected_error
