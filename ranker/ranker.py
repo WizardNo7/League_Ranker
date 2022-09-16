@@ -20,6 +20,9 @@ def init_argparser(args):
                     "compile rankings for the league.")
     parser.add_argument("results_file", default="",
                         help="path to file that contains match results")
+    parser.add_argument("-o", "--output", default="",
+                        help="File to use for ranking output. "
+                        "Rankings will be printed if no file is specified.")
     parser.add_argument("-v", "--version", action="version", version="0.0.1")
 
     return parser.parse_args(args)

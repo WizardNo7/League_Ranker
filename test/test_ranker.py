@@ -16,7 +16,9 @@ def test_init_argparse_version(capsys):
 
 
 @pytest.mark.parametrize("example_arg_inputs, expected_result", [
-    ([""], ""), (["in.txt"], "in.txt"), (["-"], "-")  # Test result_file arg
+    ([""], ""), (["in.txt"], "in.txt"), (["-"], "-"),  # Test result_file arg
+    (["-o"], "argument -o/--output: expected one argument"),
+    (["-o", "out.txt"], "the following arguments are required: results_file")
 ])
 def test_init_argparse_arg_errors(capsys, example_arg_inputs, expected_result):
     try:
@@ -25,9 +27,15 @@ def test_init_argparse_arg_errors(capsys, example_arg_inputs, expected_result):
         pass  # argparse will throw a SysExit, it's not an error
     finally:
         out, err = capsys.readouterr()
-        captured = [out, err]
+        captured = [out.strip(), err.splitlines()]
 
-    assert args.results_file == expected_result
+    if len(captured[1]) > 0:
+        err = captured[1][1].find("error:")
+        err_message = captured[1][1][err + len("error: "):]
+
+        assert err_message == expected_result
+    else:
+        assert args.results_file == expected_result
 
 
 def test_load_results_from_file_error():
