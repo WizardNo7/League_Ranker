@@ -137,3 +137,13 @@ def test_ranker_main_error(capsys, example_arg_inputs, expected_error):
         assert re.compile(expected_error).match(capt_out.strip())
     else:
         assert capt_out.strip() == expected_error
+
+
+def test_ranker_main(capsys, example_results_file, example_rankings):
+    """
+    Test that the main() function returns the expected rankings.
+    """
+    ranker.main([example_results_file.as_posix()])
+    capt_out = capsys.readouterr().out
+
+    assert capt_out.strip() == "\n".join(example_rankings)
