@@ -9,10 +9,25 @@ from ranker import ranker
 def test_init_argparse_version(capsys):
     try:
         ranker.init_argparser(["-v"])
-    except SystemExit:
+    except SystemExit:  # argparse will throw a SysExit, it's not an error
         capt_out = capsys.readouterr().out
 
     assert capt_out.splitlines()[0] == "0.0.1"
+
+
+@pytest.mark.parametrize("example_arg_inputs, expected_result", [
+    ([""], ""), (["in.txt"], "in.txt"), (["-"], "-")  # Test result_file arg
+])
+def test_init_argparse_arg_errors(capsys, example_arg_inputs, expected_result):
+    try:
+        args = ranker.init_argparser(example_arg_inputs)
+    except SystemExit:
+        pass  # argparse will throw a SysExit, it's not an error
+    finally:
+        out, err = capsys.readouterr()
+        captured = [out, err]
+
+    assert args.results_file == expected_result
 
 
 def test_load_results_from_file_error():

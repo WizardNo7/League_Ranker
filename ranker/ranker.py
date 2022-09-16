@@ -18,6 +18,8 @@ def init_argparser(args):
     parser = argparse.ArgumentParser(
         description="Parse match results file/input and "
                     "compile rankings for the league.")
+    parser.add_argument("results_file", default="",
+                        help="path to file that contains match results")
     parser.add_argument("-v", "--version", action="version", version="0.0.1")
 
     return parser.parse_args(args)
@@ -40,7 +42,7 @@ def main():
     args = init_argparser(sys.argv[1:])
 
     try:
-        results = load_results_from_file("test_file.txt")
+        results = load_results_from_file(args.results_file)
         print(results)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
