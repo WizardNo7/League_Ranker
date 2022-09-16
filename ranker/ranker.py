@@ -39,7 +39,33 @@ def load_results_from_file(file_path):
 
 
 def parse_results(results):
-    pass
+    result_table = {}
+    team_stats = {
+        "wins": 0,
+        "losses": 0,
+        "draws": 0
+    }
+
+    for match in results:
+        teams = match.strip().split(", ")
+
+        for i in range(2):
+            teams[i] = teams[i].rsplit(" ", 1)
+
+            if teams[i][0] not in result_table:
+                result_table[teams[i][0]] = team_stats.copy()
+
+        if teams[0][1] < teams[1][1]:
+            result_table[teams[0][0]]["losses"] += 1
+            result_table[teams[1][0]]["wins"] += 1
+        elif teams[0][1] > teams[1][1]:
+            result_table[teams[0][0]]["wins"] += 1
+            result_table[teams[1][0]]["losses"] += 1
+        else:
+            result_table[teams[0][0]]["draws"] += 1
+            result_table[teams[1][0]]["draws"] += 1
+
+    return result_table
 
 
 def main():
@@ -47,7 +73,8 @@ def main():
 
     try:
         results = load_results_from_file(args.results_file)
-        print(results)
+        parsed_results = parse_results(results)
+        print(parsed_results)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
             print(e)
