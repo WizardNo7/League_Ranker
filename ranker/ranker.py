@@ -69,7 +69,18 @@ def parse_results(results):
 
 
 def calculate_points(parsed_results):
-    pass
+    scored_results = {}
+
+    for key in parsed_results:
+        points = (3 * parsed_results[key]["wins"]
+                  ) + parsed_results[key]["draws"]
+
+        if points not in scored_results:
+            scored_results[points] = []
+
+        scored_results[points].append(key)
+
+    return scored_results
 
 
 def main():
@@ -78,7 +89,8 @@ def main():
     try:
         results = load_results_from_file(args.results_file)
         parsed_results = parse_results(results)
-        print(parsed_results)
+        scored_results = calculate_points(parsed_results)
+        print(scored_results)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
             print(e)
