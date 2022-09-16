@@ -77,13 +77,29 @@ def test_parse_results(example_results, example_results_table):
     assert ranker.parse_results(example_results) == example_results_table
 
 
-def test_calculate_points(example_results_table):
-    example_scored_results = {
+@ pytest.fixture
+def example_scored_results():
+    return {
         6: ["Tarantulas"],
         5: ["Lions"],
         1: ["Snakes", "FC Awesome"],
         0: ["Grouches"]
     }
 
+
+def test_calculate_points(example_results_table, example_scored_results):
     assert ranker.calculate_points(
         example_results_table) == example_scored_results
+
+
+def test_format_rankings(example_scored_results):
+    example_rankings = [
+        "1. Tarantulas, 6 pts",
+        "2. Lions, 5 pts",
+        "3. FC Awesome, 1 pt",
+        "3. Snakes, 1 pt",
+        "5. Grouches, 0 pts"
+    ]
+
+    assert ranker.format_rankings(
+        example_scored_results) == example_rankings

@@ -83,6 +83,10 @@ def calculate_points(parsed_results):
     return scored_results
 
 
+def format_rankings(scored_results):
+    pass
+
+
 def main():
     args = init_argparser(sys.argv[1:])
 
@@ -90,7 +94,8 @@ def main():
         results = load_results_from_file(args.results_file)
         parsed_results = parse_results(results)
         scored_results = calculate_points(parsed_results)
-        print(scored_results)
+        rankings = format_rankings(scored_results)
+        print(rankings)
     except Exception as e:
         if isinstance(e, (FileNotFoundError)):
             print(e)
